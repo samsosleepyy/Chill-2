@@ -11,6 +11,10 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="https://unpkg.com/javascript-obfuscator@4.0.0/dist/index.browser.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
@@ -23,7 +27,6 @@
                 radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
             background-attachment: fixed;
             color: #f1f5f9;
-            overflow-x: hidden;
         }
 
         .glass-panel {
@@ -34,7 +37,12 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
-        .input-container { position: relative; width: 100%; }
+        /* Modern Input Container */
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
+
         .input-dark {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -51,6 +59,7 @@
             box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
         }
 
+        /* Number Input for Smooth Speed */
         .input-number-minimal {
             background: rgba(99, 102, 241, 0.1);
             border: 1px solid rgba(99, 102, 241, 0.3);
@@ -63,7 +72,13 @@
             outline: none;
             transition: all 0.2s;
         }
-
+        .input-number-minimal:focus {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #818cf8;
+            color: white;
+        }
+        
+        /* Fixed Placeholder Logic */
         .custom-placeholder {
             position: absolute;
             left: 1rem;
@@ -82,7 +97,10 @@
             transform: translateY(-50%) translateX(10px);
         }
 
-        .search-dropdown { position: relative; }
+        /* Modern Select & Search Styles */
+        .search-dropdown {
+            position: relative;
+        }
         .search-results {
             position: absolute;
             top: 105%;
@@ -100,9 +118,16 @@
         .search-results.show { display: block; animation: slideDown 0.2s ease-out; }
         .search-item { padding: 0.6rem 1rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
         .search-item:hover { background: #334155; }
+        
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .slot-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 5px; }
+        /* Slot Grid */
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 5px;
+        }
         .slot-item {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -121,42 +146,43 @@
         .slot-icon { font-size: 24px; margin-bottom: 5px; display: block; }
 
         .btn-glow:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.6); }
+        .loading-pulse { animation: pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse-purple { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
         
+        /* Toggle Switch */
         .toggle-checkbox:checked { right: 0; border-color: #8b5cf6; }
         .toggle-checkbox:checked + .toggle-label { background-color: #8b5cf6; }
         .toggle-label { width: 44px; height: 24px; background-color: #334155; border-radius: 9999px; position: relative; cursor: pointer; transition: background-color 0.2s ease-in; }
         .toggle-label:after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background-color: #fff; border-radius: 50%; transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); }
         input:checked + .toggle-label:after { transform: translateX(20px); }
 
+        /* Range Slider */
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #a78bfa; margin-top: -7px; cursor: pointer; transition: transform 0.1s; box-shadow: 0 0 10px rgba(167, 139, 250, 0.5); }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #475569; border-radius: 2px; }
 
-        @keyframes modalEnter { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .modal-overlay { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 100; animation: fadeIn 0.2s ease-out; }
-        .modal-content { animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        /* Custom Modal Animation */
+        @keyframes modalEnter {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .modal-content {
+            animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.5); border-radius: 4px; }
-        
-        /* Video Joke Overlay */
-        .joke-overlay {
-            position: fixed;
-            inset: 0;
-            background: black;
-            z-index: 99999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.5s ease-out;
-        }
-        .joke-video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: contain;
-        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.8); }
     </style>
 </head>
 <body class="min-h-screen py-10 px-4 flex justify-center items-start">
@@ -166,9 +192,16 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
+        // --- ⚙️ CONFIGURATION ZONE ⚙️ ---
         const APP_CONFIG = {
             ENABLE_SMOOTH_HEAD: true,
-            ENABLE_LOCK_SYSTEM: true
+            ENABLE_HAIR_PHYSICS: true, 
+            ENABLE_LOCK_SYSTEM: true,
+            ENABLE_OBFUSCATION: true,
+            MESSAGES: {
+                WELCOME: "§l§aAuto Addon By SamSoSleepy https://discord.gg/FnmWw7nWyq หากคุณซื้อมาแสดงว่าถูกหลอก Skin : §e",
+                LOCKED: "§eไอเทมนี้ถูกล็อคสำหรับคุณ!"
+            }
         };
 
         const MINECRAFT_EFFECTS = [
@@ -177,7 +210,16 @@
             { id: "haste", name: "เร่งขุด (Haste)", icon: "⛏️" },
             { id: "strength", name: "ความแข็งแกร่ง (Strength)", icon: "💪" },
             { id: "jump_boost", name: "กระโดดสูง (Jump Boost)", icon: "🦘" },
-            { id: "regeneration", name: "ฟื้นฟูเลือด (Regeneration)", icon: "💖" }
+            { id: "regeneration", name: "ฟื้นฟูเลือด (Regeneration)", icon: "💖" },
+            { id: "resistance", name: "ต้านทาน (Resistance)", icon: "🛡️" },
+            { id: "fire_resistance", name: "ต้านทานไฟ (Fire Resistance)", icon: "🔥" },
+            { id: "water_breathing", name: "หายใจใต้น้ำ (Water Breathing)", icon: "💧" },
+            { id: "invisibility", name: "ล่องหน (Invisibility)", icon: "👻" },
+            { id: "night_vision", name: "มองเห็นในที่มืด (Night Vision)", icon: "👁️" },
+            { id: "health_boost", name: "เพิ่มหลอดเลือด (Health Boost)", icon: "❤️" },
+            { id: "slow_falling", name: "ร่วงช้า (Slow Falling)", icon: "🪶" },
+            { id: "conduit_power", name: "พลังคอนดูอิต (Conduit Power)", icon: "🐚" },
+            { id: "hero_of_the_village", name: "วีรบุรุษของหมู่บ้าน (Hero of Village)", icon: "🏅" }
         ];
 
         const IconBase = ({ children, size = 24, className = "" }) => (
@@ -195,6 +237,41 @@
         const IconPlus = ({size=18}) => <IconBase size={size}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></IconBase>;
         const IconTrash = ({size=18}) => <IconBase size={size}><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></IconBase>;
         const IconPlay = ({size=18}) => <IconBase size={size}><polygon points="5 3 19 12 5 21 5 3"/></IconBase>;
+        const IconFeather = ({size=20}) => <IconBase size={size} className="text-emerald-400"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></IconBase>;
+
+        const saveFile = (blob, filename) => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        };
+        
+        const genRandomStr = (length = 20) => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            let result = '';
+            for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+            return result;
+        };
+
+        const toUnicodeEscape = (str) => {
+            return str.split('').map(char => {
+                const code = char.charCodeAt(0);
+                return '\\u' + code.toString(16).padStart(4, '0');
+            }).join('');
+        };
+
+        const toughJson = (obj) => {
+            const str = JSON.stringify(obj);
+            return str.replace(/"((?:[^"\\]|\\.)*)"/g, (match, content) => {
+                let esc = "";
+                for (let i = 0; i < content.length; i++) {
+                    const c = content.charCodeAt(i);
+                    esc += '\\u' + c.toString(16).padStart(4, '0');
+                }
+                return '"' + esc + '"';
+            });
+        };
 
         const CustomModal = ({ isOpen, onClose, title, message, type }) => {
             if (!isOpen) return null;
@@ -202,7 +279,7 @@
                 <div className="fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50" onClick={onClose}>
                     <div className="bg-[#1e293b] border border-gray-600 p-6 rounded-2xl max-w-sm w-full shadow-2xl modal-content text-center relative overflow-hidden" onClick={e => e.stopPropagation()}>
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500"></div>
-                        <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${type === 'error' ? 'bg-red-500/10 text-red-400' : type === 'success' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
+                        <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${type === 'error' ? 'bg-red-500/10 text-red-400' : type === 'success' ? 'bg-green-500/10 text-green-400' : type === 'warning' ? 'bg-yellow-500/10 text-yellow-400' : 'bg-blue-500/10 text-blue-400'}`}>
                             {type === 'error' ? <IconLock size={32} /> : type === 'success' ? <IconUnlock size={32} /> : <IconAlert size={32} />}
                         </div>
                         <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
@@ -215,40 +292,29 @@
             );
         };
 
-        const ConfirmModal = ({ isOpen, onConfirm, onCancel, title, message }) => {
-            if (!isOpen) return null;
-            return (
-                <div className="fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50" onClick={onCancel}>
-                    <div className="bg-[#1e293b] border border-gray-600 p-6 rounded-2xl max-w-sm w-full shadow-2xl modal-content text-center relative overflow-hidden" onClick={e => e.stopPropagation()}>
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
-                        <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-yellow-500/10 text-yellow-400">
-                            <IconAlert size={32} />
-                        </div>
-                        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-                        <p className="text-gray-300 mb-6 text-sm leading-relaxed whitespace-pre-line text-left bg-black/20 p-3 rounded-lg border border-gray-700 max-h-48 overflow-y-auto custom-scroll">{message}</p>
-                        <div className="flex gap-3">
-                            <button onClick={onCancel} className="w-1/2 py-3 rounded-xl font-bold text-gray-300 bg-gray-700 hover:bg-gray-600 transition shadow-lg">
-                                ยกเลิก
-                            </button>
-                            <button onClick={onConfirm} className="w-1/2 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-lg shadow-green-500/20 transition transform hover:scale-[1.02] active:scale-95">
-                                ยินยอม
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
+        // --- BASIC CANVAS PREVIEW ---
         const CanvasPreview = ({ imageSrc, showGrid }) => {
             const canvasRef = useRef(null);
             const containerRef = useRef(null);
             const [imageObj, setImageObj] = useState(null);
+            const [transform, setTransform] = useState({ x: 0, y: 0, k: 1 });
+            const [isDragging, setIsDragging] = useState(false);
+            const [lastPoint, setLastPoint] = useState(null);
+            const [lastDist, setLastDist] = useState(null);
 
             useEffect(() => {
                 if (imageSrc) {
                     const img = new Image();
                     img.src = imageSrc;
-                    img.onload = () => setImageObj(img);
+                    img.onload = () => {
+                        setImageObj(img);
+                        if (containerRef.current) {
+                            const cw = containerRef.current.clientWidth;
+                            const ch = containerRef.current.clientHeight;
+                            const scale = Math.min((cw - 40) / img.width, (ch - 40) / img.height);
+                            setTransform({ x: (cw - img.width * scale) / 2, y: (ch - img.height * scale) / 2, k: scale });
+                        }
+                    };
                 } else {
                     setImageObj(null);
                 }
@@ -269,65 +335,124 @@
                 canvas.height = container.clientHeight;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.imageSmoothingEnabled = false;
-                
-                const scale = Math.min((canvas.width - 40) / imageObj.width, (canvas.height - 40) / imageObj.height);
-                const x = (canvas.width - imageObj.width * scale) / 2;
-                const y = (canvas.height - imageObj.height * scale) / 2;
-
                 ctx.save();
-                ctx.translate(x, y);
-                ctx.scale(scale, scale);
+                ctx.translate(transform.x, transform.y);
+                ctx.scale(transform.k, transform.k);
                 ctx.drawImage(imageObj, 0, 0);
-                
                 if (showGrid) {
                     ctx.beginPath();
                     ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-                    ctx.lineWidth = 1 / scale;
-                    for (let px = 0; px <= imageObj.width; px++) { ctx.moveTo(px, 0); ctx.lineTo(px, imageObj.height); }
-                    for (let py = 0; py <= imageObj.height; py++) { ctx.moveTo(0, py); ctx.lineTo(imageObj.width, py); }
+                    ctx.lineWidth = 1 / transform.k;
+                    for (let x = 0; x <= imageObj.width; x++) { ctx.moveTo(x, 0); ctx.lineTo(x, imageObj.height); }
+                    for (let y = 0; y <= imageObj.height; y++) { ctx.moveTo(0, y); ctx.lineTo(imageObj.width, y); }
                     ctx.stroke();
                 }
                 ctx.restore();
-            }, [imageObj, showGrid]);
+            }, [imageObj, transform, showGrid]);
+
+            const getPoints = (e) => {
+                if (e.touches) {
+                    if (e.touches.length === 1) return [{ x: e.touches[0].clientX, y: e.touches[0].clientY }];
+                    if (e.touches.length === 2) return [{ x: e.touches[0].clientX, y: e.touches[0].clientY }, { x: e.touches[1].clientX, y: e.touches[1].clientY }];
+                }
+                return [{ x: e.clientX, y: e.clientY }];
+            };
+
+            const onStart = (e) => {
+                const points = getPoints(e);
+                if (points.length === 1) { setIsDragging(true); setLastPoint({ x: points[0].x, y: points[0].y }); } 
+                else if (points.length === 2) { setIsDragging(true); const dist = Math.sqrt(Math.pow(points[0].x - points[1].x, 2) + Math.pow(points[0].y - points[1].y, 2)); setLastDist(dist); setLastPoint({ x: (points[0].x + points[1].x)/2, y: (points[0].y + points[1].y)/2 }); }
+            };
+
+            const onMove = (e) => {
+                if (!isDragging) return;
+                e.preventDefault(); 
+                const points = getPoints(e);
+                if (points.length === 1 && lastPoint) { const dx = points[0].x - lastPoint.x; const dy = points[0].y - lastPoint.y; setTransform(t => ({ ...t, x: t.x + dx, y: t.y + dy })); setLastPoint({ x: points[0].x, y: points[0].y }); } 
+                else if (points.length === 2 && lastDist && lastPoint) { const newDist = Math.sqrt(Math.pow(points[0].x - points[1].x, 2) + Math.pow(points[0].y - points[1].y, 2)); const scaleFactor = newDist / lastDist; const newK = Math.max(0.1, Math.min(50, transform.k * scaleFactor)); const curCenter = { x: (points[0].x + points[1].x)/2, y: (points[0].y + points[1].y)/2 }; const dx = curCenter.x - lastPoint.x; const dy = curCenter.y - lastPoint.y; setTransform(t => ({ x: t.x + dx, y: t.y + dy, k: newK })); setLastDist(newDist); setLastPoint(curCenter); }
+            };
+
+            const onEnd = () => { setIsDragging(false); setLastDist(null); setLastPoint(null); };
+            const onWheel = (e) => { e.preventDefault(); const rect = containerRef.current.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; const delta = e.deltaY > 0 ? 0.9 : 1.1; const newK = Math.max(0.1, Math.min(50, transform.k * delta)); setTransform(t => { const worldX = (mouseX - t.x) / t.k; const worldY = (mouseY - t.y) / t.k; return { x: mouseX - worldX * newK, y: mouseY - worldY * newK, k: newK }; }); };
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+                const tStart = (e) => onStart(e); const tMove = (e) => onMove(e); const tEnd = () => onEnd();
+                const mDown = (e) => { onStart(e); }; const mMove = (e) => onMove(e); const mUp = () => onEnd();
+                canvas.addEventListener('touchstart', tStart, { passive: false }); canvas.addEventListener('touchmove', tMove, { passive: false }); canvas.addEventListener('touchend', tEnd);
+                canvas.addEventListener('mousedown', mDown); window.addEventListener('mousemove', mMove); window.addEventListener('mouseup', mUp); canvas.addEventListener('wheel', onWheel, { passive: false });
+                return () => { canvas.removeEventListener('touchstart', tStart); canvas.removeEventListener('touchmove', tMove); canvas.removeEventListener('touchend', tEnd); canvas.removeEventListener('mousedown', mDown); window.removeEventListener('mousemove', mMove); window.removeEventListener('mouseup', mUp); canvas.removeEventListener('wheel', onWheel); };
+            }, [isDragging, lastPoint, lastDist, transform]);
 
             return (
                 <div ref={containerRef} className="w-full h-80 bg-gray-900/80 border-2 border-dashed border-gray-600 rounded-xl relative overflow-hidden"
                      style={{ backgroundImage: 'linear-gradient(45deg, #1f2937 25%, transparent 25%), linear-gradient(-45deg, #1f2937 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1f2937 75%), linear-gradient(-45deg, transparent 75%, #1f2937 75%)', backgroundSize: '20px 20px', backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px', touchAction: 'none' }}>
                     {!imageObj && <div className="absolute inset-0 flex items-center justify-center text-gray-500 pointer-events-none">ยังไม่มีรูปภาพ</div>}
-                    <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+                    <canvas ref={canvasRef} className="absolute inset-0 w-full h-full cursor-move" />
+                    <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg pointer-events-none z-10">Zoom: {transform.k.toFixed(1)}x</div>
                 </div>
             );
         };
 
         const App = () => {
-            const [packConfig, setPackConfig] = useState({ packName: "", description: "" });
+            const [packConfig, setPackConfig] = useState({
+                packName: "", 
+                description: "",
+                packIconDataUrl: null,
+                packIconPreview: null
+            });
+
             const [itemConfig, setItemConfig] = useState({
-                itemName: "", itemId: "", isLocked: true, xboxNames: [], currentXboxName: "", giveOnSpawn: true,
-                isSmoothHead: true, effect: "none", effectLevel: "", armorSlot: "slot.armor.head",
-                textureDataUrl: null, itemTextureDataUrl: null,
-                geometryFileName: "", geometryBones: [], geometryDataContent: null,
-                animationFileName: "", animatedBones: [], animationDataContent: null
+                itemName: "", 
+                itemId: "", 
+                isLocked: APP_CONFIG.ENABLE_LOCK_SYSTEM,
+                xboxNames: [], 
+                currentXboxName: "",
+                giveOnSpawn: true,
+                isSmoothHead: APP_CONFIG.ENABLE_SMOOTH_HEAD,
+                isHairPhysics: false, 
+                hairPhysicsBone: "",  
+                effect: "none", effectLevel: "", armorSlot: "slot.armor.head",
+                textureDataUrl: null, texturePreview: null, textureDim: "ยังไม่มีรูปภาพ",
+                itemTextureDataUrl: null, 
+                smoothSpeed: 0.15,
+                geometryDataContent: null, geometryFileName: "",
+                geometryBones: [], 
+                animationDataContent: null, animationFileName: "",
+                animatedBones: [] 
             });
 
             const [savedItems, setSavedItems] = useState([]);
             const [showGrid, setShowGrid] = useState(false);
             const [modalState, setModalState] = useState({ isOpen: false, title: "", message: "", type: "info" });
-            const [confirmState, setConfirmState] = useState({ isOpen: false });
-            const [searchTerm, setSearchTerm] = useState("");
-            const [showEffectList, setShowEffectList] = useState(false);
-            
-            // สถานะสำหรับการทำ April Fools Video
-            const [playJoke, setPlayJoke] = useState(false);
-
             const showModal = (title, message, type = "info") => setModalState({ isOpen: true, title, message, type });
             const closeModal = () => setModalState(prev => ({ ...prev, isOpen: false }));
+            const [searchTerm, setSearchTerm] = useState("");
+            const [showEffectList, setShowEffectList] = useState(false);
+            const [isGenerating, setIsGenerating] = useState(false);
+            const [statusText, setStatusText] = useState("ดาวน์โหลด Addon");
             const searchRef = useRef(null);
 
             useEffect(() => { const handleClickOutside = (event) => { if (searchRef.current && !searchRef.current.contains(event.target)) setShowEffectList(false); }; document.addEventListener("mousedown", handleClickOutside); return () => document.removeEventListener("mousedown", handleClickOutside); }, []);
 
+            const handlePackChange = (e) => {
+                const { name, value, type, checked } = e.target;
+                setPackConfig(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+            };
+
             const handleItemChange = (e) => {
                 const { name, value, type, checked } = e.target;
-                setItemConfig(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+                let newValue = type === 'checkbox' ? checked : value;
+                if (name === 'effectLevel') { if (value === "") newValue = ""; else { let num = parseInt(value); if (isNaN(num)) num = 1; if (num > 255) num = 255; newValue = num; } }
+                if (name === 'smoothSpeed') newValue = parseFloat(value);
+                
+                setItemConfig(prev => {
+                    let updates = { [name]: newValue };
+                    if (name === 'isSmoothHead' && !newValue) updates.smoothSpeed = 1.0; 
+                    if (name === 'isHairPhysics' && !newValue) updates.hairPhysicsBone = "";
+                    return { ...prev, ...updates };
+                });
             };
 
             const handleAddItemToCart = () => {
@@ -335,10 +460,17 @@
                     showModal('ข้อมูลไอเทมไม่ครบ', 'กรุณากรอก "ไอดีไอเทม", "ชื่อไอเทมในเกม" และอัปโหลดสกินอย่างน้อย 1 อย่างก่อนเพิ่มลงแพ็ก', 'error');
                     return;
                 }
-                if (itemConfig.isLocked && itemConfig.xboxNames.length === 0) {
-                    showModal('ข้อมูลไม่ครบถ้วน', `คุณเปิดใช้งานระบบล็อคเจ้าของ\nกรุณาเพิ่มชื่อ Xbox Gamertag อย่างน้อย 1 ชื่อ`, 'error'); 
+                
+                if (itemConfig.isLocked && APP_CONFIG.ENABLE_LOCK_SYSTEM && itemConfig.xboxNames.length === 0) {
+                    showModal('ข้อมูลไม่ครบถ้วน', `คุณเปิดใช้งานระบบล็อคเจ้าของ\nกรุณาเพิ่มชื่อ Xbox Gamertag อย่างน้อย 1 ชื่อสำหรับไอเทม "${itemConfig.itemName}"`, 'error'); 
                     return;
                 }
+
+                if (itemConfig.isHairPhysics && !itemConfig.hairPhysicsBone) {
+                    showModal('ข้อมูลไม่ครบถ้วน', 'คุณเปิดใช้งาน "ฟิสิกส์จงอย" แต่ยังไม่ได้เลือกกระดูกที่จะใช้แสดงผล', 'warning');
+                    return;
+                }
+
                 const exists = savedItems.find(i => i.itemId === itemConfig.itemId);
                 if (exists) {
                     showModal('ไอเทมซ้ำ', `ไอเทม ID "${itemConfig.itemId}" มีอยู่ในแพ็กแล้ว กรุณาเปลี่ยน ID`, 'error');
@@ -349,22 +481,34 @@
                 showModal('เพิ่มสำเร็จ!', `ไอเทม ${itemConfig.itemName} ถูกเพิ่มลงในแพ็กแล้ว\nคุณสามารถสร้างไอเทมชิ้นต่อไปได้เลย`, 'success');
                 
                 setItemConfig(prev => ({
-                    ...prev, itemName: "", itemId: "", textureDataUrl: null, itemTextureDataUrl: null,
-                    geometryFileName: "", geometryBones: [], geometryDataContent: null,
-                    animationFileName: "", animatedBones: [], animationDataContent: null
+                    ...prev,
+                    itemName: "",
+                    itemId: "",
+                    textureDataUrl: null,
+                    texturePreview: null,
+                    itemTextureDataUrl: null,
+                    geometryDataContent: null,
+                    geometryFileName: "",
+                    geometryBones: [],
+                    animationDataContent: null, 
+                    animationFileName: "",
+                    animatedBones: [],
+                    hairPhysicsBone: "",
+                    isHairPhysics: false
                 }));
             };
+
+            const handleRemoveItemFromCart = (uid) => { setSavedItems(savedItems.filter(item => item._uid !== uid)); };
 
             const addXboxName = () => {
                 if (itemConfig.currentXboxName.trim() !== "" && !itemConfig.xboxNames.includes(itemConfig.currentXboxName.trim())) {
                     setItemConfig(prev => ({ ...prev, xboxNames: [...prev.xboxNames, prev.currentXboxName.trim()], currentXboxName: "" }));
                 }
             };
+            const removeXboxName = (nameToRemove) => { setItemConfig(prev => ({ ...prev, xboxNames: prev.xboxNames.filter(n => n !== nameToRemove) })); };
+            const handleEffectSelect = (effectId) => { setItemConfig(prev => ({ ...prev, effect: effectId })); setShowEffectList(false); setSearchTerm(""); };
+            const handleSlotSelect = (slotId) => setItemConfig(prev => ({ ...prev, armorSlot: slotId }));
             
-            const removeXboxName = (nameToRemove) => { 
-                setItemConfig(prev => ({ ...prev, xboxNames: prev.xboxNames.filter(n => n !== nameToRemove) })); 
-            };
-
             const handleFileRead = (file, type) => { 
                 if (!file) return;
                 const reader = new FileReader();
@@ -415,14 +559,16 @@
 
                             setItemConfig(prev => ({ 
                                 ...prev, 
+                                geometryDataContent: JSON.stringify(json), 
                                 geometryFileName: file.name,
-                                geometryDataContent: text,
                                 geometryBones: bonesList,
+                                animationDataContent: null,
                                 animationFileName: "",
-                                animatedBones: []
+                                animatedBones: [],
+                                hairPhysicsBone: "" 
                             }));
                         } catch (e) {
-                            showModal('เกิดข้อผิดพลาด', `ไฟล์ Geometry .json ไม่ถูกต้อง\n\n${e.message}`, 'error');
+                            showModal('เกิดข้อผิดพลาด', `ไฟล์ Geometry .json ไม่ถูกต้อง หรือรูปแบบโค้ดผิดพลาด\n(เช่น ลืมปีกกา หรือมีลูกน้ำเกิน)\n\nรายละเอียดเพื่อแก้ไข:\n${e.message}`, 'error');
                         }
                     };
                     reader.readAsText(file);
@@ -430,15 +576,15 @@
                 else if (type === 'animationDataContent') {
                     reader.onload = (event) => {
                         try {
-                            if (!itemConfig.geometryFileName) {
+                            if (!itemConfig.geometryDataContent || itemConfig.geometryBones.length === 0) {
                                  showModal('อัปโหลดผิดลำดับ', 'กรุณาอัปโหลดไฟล์ โมเดล (Geometry .json) ก่อนทำการอัปโหลดอนิเมชั่น เพื่อให้ระบบสามารถตรวจสอบกระดูกได้', 'warning');
                                  return;
                             }
 
-                            let text = event.target.result.replace(/^\uFEFF/, '');
-                            text = text.replace(/\u00A0/g, ' ');
-                            text = text.replace(/[“”]/g, '"');
-                            text = text.replace(/,\s*([}\]])/g, '$1');
+                            let text = event.target.result.replace(/^\uFEFF/, ''); 
+                            text = text.replace(/\u00A0/g, ' '); 
+                            text = text.replace(/[“”]/g, '"'); 
+                            text = text.replace(/,\s*([}\]])/g, '$1'); 
                             const json = JSON.parse(text);
                             
                             let animBones = new Set();
@@ -461,18 +607,18 @@
                             });
 
                             if(missingBones.length > 0) {
-                                showModal('⚠️ กระดูกไม่ตรงกัน!', `พบชิ้นส่วนในอนิเมชั่นที่ "ไม่มี" ในโมเดล Geometry ที่อัปโหลด:\n\n[ ${missingBones.join(', ')} ]\n\nกรุณาใช้ไฟล์อนิเมชั่นที่สร้างมาคู่กับโมเดลนี้เท่านั้นครับ`, 'error');
-                                return;
+                                showModal('⚠️ กระดูกไม่ตรงกัน!', `พบชิ้นส่วนในอนิเมชั่นที่ "ไม่มี" ในโมเดล Geometry ที่อัปโหลด:\n\n[ ${missingBones.join(', ')} ]\n\nการฝืนใช้จะทำให้ Addon พัง กรุณาใช้ไฟล์อนิเมชั่นที่สร้างมาคู่กับโมเดลนี้เท่านั้นครับ`, 'error');
+                                return; 
                             }
 
                             setItemConfig(prev => ({ 
                                 ...prev, 
+                                animationDataContent: JSON.stringify(json), 
                                 animationFileName: file.name,
-                                animationDataContent: text,
-                                animatedBones: Array.from(animBones)
+                                animatedBones: Array.from(animBones) 
                             }));
                         } catch (e) {
-                            showModal('เกิดข้อผิดพลาด', `ไฟล์ Animation .json ไม่ถูกต้อง\n\n${e.message}`, 'error');
+                            showModal('เกิดข้อผิดพลาด', `ไฟล์ Animation .json ไม่ถูกต้อง หรือรูปแบบโค้ดผิดพลาด\n(เช่น ลืมปีกกา หรือมีลูกน้ำเกิน)\n\nรายละเอียดเพื่อแก้ไข:\n${e.message}`, 'error');
                         }
                     };
                     reader.readAsText(file);
@@ -480,122 +626,398 @@
                 else {
                     reader.onload = (event) => { 
                         const dataUrl = event.target.result; 
-                        if (type === 'textureDataUrl') setItemConfig(prev => ({ ...prev, textureDataUrl: dataUrl })); 
-                        else if (type === 'itemTextureDataUrl') setItemConfig(prev => ({ ...prev, itemTextureDataUrl: dataUrl })); 
+                        if (type === 'textureDataUrl') { 
+                            const img = new Image(); img.src = dataUrl; 
+                            img.onload = () => { setItemConfig(prev => ({ ...prev, textureDataUrl: dataUrl, textureDim: `${img.width}x${img.height}` })); }; 
+                        } else if (type === 'itemTextureDataUrl') {
+                            setItemConfig(prev => ({ ...prev, itemTextureDataUrl: dataUrl }));
+                        } else if (type === 'packIconDataUrl') {
+                            setPackConfig(prev => ({ ...prev, packIconDataUrl: dataUrl, packIconPreview: dataUrl })); 
+                        }
                     }; 
                     reader.readAsDataURL(file); 
                 }
             };
 
-            const handleGenerate = () => {
+            const generateSmoothLogic = (speedVal = 0.15) => {
+                const vars = {
+                    smoothY: "variable.sy_" + genRandomStr(8),
+                    smoothX: "variable.sx_" + genRandomStr(8),
+                    smoothYawSpeed: "variable.sys_" + genRandomStr(8)
+                };
+                
+                let lerpMult = (parseFloat(speedVal) * 40).toFixed(2);
+                
+                const initialize = [
+                    `${vars.smoothY} = query.target_y_rotation;`,
+                    `${vars.smoothX} = query.target_x_rotation;`,
+                    `${vars.smoothYawSpeed} = 0;`
+                ];
+                
+                const pre_animation = [
+                    `${vars.smoothY} = math.lerp(${vars.smoothY}, query.target_y_rotation, query.delta_time * ${lerpMult});`,
+                    `${vars.smoothX} = math.lerp(${vars.smoothX}, math.clamp(query.target_x_rotation, -45, 30), query.delta_time * ${lerpMult});`,
+                    `${vars.smoothYawSpeed} = math.lerp(${vars.smoothYawSpeed}, query.yaw_speed, query.delta_time * 15);`
+                ];
+                
+                return { vars, initialize, pre_animation };
+            };
+
+            const handleGenerate = async () => {
                 let itemsToProcess = [...savedItems];
+                
                 if (itemConfig.itemId && itemConfig.itemName && (itemConfig.textureDataUrl || itemConfig.itemTextureDataUrl)) {
-                    if (itemConfig.isLocked && itemConfig.xboxNames.length === 0) {
+                    if (itemConfig.isLocked && APP_CONFIG.ENABLE_LOCK_SYSTEM && itemConfig.xboxNames.length === 0) {
                         showModal('ข้อมูลไม่ครบถ้วน', `ไอเทม "${itemConfig.itemName}" เปิดใช้งานระบบล็อคเจ้าของ\nกรุณาเพิ่มชื่อ Xbox Gamertag อย่างน้อย 1 ชื่อ`, 'error'); 
                         return;
                     }
-                    itemsToProcess.push({ ...itemConfig, _uid: Date.now() });
+                    if (itemConfig.isHairPhysics && !itemConfig.hairPhysicsBone) {
+                        showModal('ข้อมูลไม่ครบถ้วน', 'คุณเปิดใช้งาน "ฟิสิกส์จงอย" แต่ยังไม่ได้เลือกกระดูกที่จะใช้แสดงผล', 'warning');
+                        return;
+                    }
+                    const exists = itemsToProcess.find(i => i.itemId === itemConfig.itemId);
+                    if (!exists) {
+                        itemsToProcess.push({ ...itemConfig, _uid: Date.now() });
+                    }
                 }
 
                 if (itemsToProcess.length === 0) {
                     showModal('ไม่มีไอเทมเลย', 'กรุณาสร้างไอเทมและกด "เพิ่มไอเทมลงแพ็ก" อย่างน้อย 1 ชิ้น', 'error');
                     return;
                 }
+                
+                setIsGenerating(true); setStatusText("กำลังประมวลผลแพ็ก...");
+                await new Promise(r => setTimeout(r, 100));
+                
+                const zip = new JSZip();
+                const getUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); });
+                const realRpUuid = getUUID(); const realBpUuid = getUUID();
+                const namespace = "custom"; 
+                
+                const bpManifest = toughJson({ format_version: 2, header: { name: `${packConfig.packName || "Custom Pack"} BP`, description: packConfig.description, uuid: realBpUuid, version: [1, 0, 0], min_engine_version: [1, 20, 50] }, modules: [{ type: "data", uuid: getUUID(), version: [1, 0, 0] }, { type: "script", uuid: getUUID(), version: [1, 0, 0], entry: "scripts/main.js", language: "javascript" }], dependencies: [{ uuid: realRpUuid, version: [1, 0, 0] }, { module_name: "@minecraft/server", version: "1.10.0" }] });
+                const rpManifest = toughJson({ format_version: 2, header: { name: `${packConfig.packName || "Custom Pack"} RP`, description: packConfig.description, uuid: realRpUuid, version: [1, 0, 0], min_engine_version: [1, 20, 50] }, modules: [{ type: "resources", uuid: getUUID(), version: [1, 0, 0] }], dependencies: [{ uuid: realBpUuid, version: [1, 0, 0] }] });
+                
+                const bh = zip.folder("Bh"); 
+                const rs = zip.folder("Rs"); 
 
-                setConfirmState({ isOpen: true });
-            };
+                bh.file("manifest.json", bpManifest); 
+                rs.file("manifest.json", rpManifest); 
 
-            const dataURLtoBlob = (dataurl) => {
-                if (!dataurl) return null;
-                const arr = dataurl.split(',');
-                const mime = arr[0].match(/:(.*?);/)[1];
-                const bstr = atob(arr[1]);
-                let n = bstr.length;
-                const u8arr = new Uint8Array(n);
-                while(n--) {
-                    u8arr[n] = bstr.charCodeAt(n);
+                const packIconData = packConfig.packIconDataUrl ? packConfig.packIconDataUrl : (itemsToProcess[0].itemTextureDataUrl || itemsToProcess[0].textureDataUrl); 
+                if (packIconData) {
+                    bh.file("pack_icon.png", packIconData.split(',')[1], {base64: true});
+                    rs.file("pack_icon.png", packIconData.split(',')[1], {base64: true});
                 }
-                return new Blob([u8arr], {type: mime});
+
+                let globalLangContent = "";
+                let itemTextureJsonData = {};
+                let combinedFunctionCommands = "";
+                let scriptItemRules = "const ITEM_RULES = {\n";
+
+                for (let i = 0; i < itemsToProcess.length; i++) {
+                    const item = itemsToProcess[i];
+                    setStatusText(`ประมวลผลไอเทม: ${item.itemName}...`);
+                    await new Promise(r => setTimeout(r, 50)); 
+
+                    const identifier = `${namespace}:${item.itemId}`;
+                    const geoIdentifier = item.itemId.replace(/[^a-zA-Z0-9_]/g, '');
+                    
+                    const allowedArray = item.isLocked ? `[${item.xboxNames.map(n => `"${toUnicodeEscape(n)}"`).join(",")}]` : "[]";
+                    scriptItemRules += `"${identifier}": { isLocked: ${item.isLocked ? 'true' : 'false'}, giveOnSpawn: ${item.giveOnSpawn ? 'true' : 'false'}, allowedNames: ${allowedArray} },\n`;
+
+                    const v = { boneName: "b" + genRandomStr(15), animName: "animation." + genRandomStr(15), molang: generateSmoothLogic(item.smoothSpeed) };
+
+                    let finalGeometryJson = "";
+                    let finalAnimationsObj = {}; 
+                    let hasAnimationsToSave = false;
+
+                    const standardBones = { body: { name: "body", pivot: [0, 24, 0], parent: undefined }, rightArm: { name: "rightArm", pivot: [-5, 22, 0], parent: "body" }, leftArm: { name: "leftArm", pivot: [5, 22, 0], parent: "body" }, rightLeg: { name: "rightLeg", pivot: [-1.9, 12, 0], parent: "body" }, leftLeg: { name: "leftLeg", pivot: [1.9, 12, 0], parent: "body" } };
+                    
+                    let targetHeadName = v.boneName; 
+                    const isSmooth = item.isSmoothHead && APP_CONFIG.ENABLE_SMOOTH_HEAD;
+
+                    let boneMapping = {}; 
+
+                    if (item.geometryDataContent) {
+                        try {
+                            let geoObj = JSON.parse(item.geometryDataContent);
+                            let geo = geoObj["minecraft:geometry"][0];
+                            geo.description.identifier = `geometry.${geoIdentifier}`;
+                            let bones = geo.bones || [];
+
+                            for (let bone of bones) {
+                                let nameLower = bone.name.toLowerCase();
+                                if (nameLower.includes("head")) boneMapping[bone.name] = "head";
+                                else if (nameLower.includes("body") || nameLower.includes("waist") || nameLower.includes("torso")) boneMapping[bone.name] = "body";
+                                else if (nameLower.includes("right") && nameLower.includes("arm")) boneMapping[bone.name] = "rightArm";
+                                else if (nameLower.includes("left") && nameLower.includes("arm")) boneMapping[bone.name] = "leftArm";
+                                else if (nameLower.includes("right") && nameLower.includes("leg")) boneMapping[bone.name] = "rightLeg";
+                                else if (nameLower.includes("left") && nameLower.includes("leg")) boneMapping[bone.name] = "leftLeg";
+                            }
+
+                            let finalBones = [];
+                            let addedStandards = new Set();
+
+                            for (let bone of bones) {
+                                let stdCat = boneMapping[bone.name];
+                                if (stdCat === "head") {
+                                    bone.name = targetHeadName; bone.parent = isSmooth ? "body" : "head"; bone.pivot = [0, 24, 0]; addedStandards.add("head_visual"); finalBones.push(bone);
+                                } else if (stdCat) {
+                                    bone.name = standardBones[stdCat].name; if (standardBones[stdCat].parent) bone.parent = standardBones[stdCat].parent; else delete bone.parent; bone.pivot = standardBones[stdCat].pivot; addedStandards.add(stdCat); finalBones.push(bone);
+                                } else {
+                                    if (bone.parent && boneMapping[bone.parent]) {
+                                        if (boneMapping[bone.parent] === "head") bone.parent = targetHeadName; else bone.parent = standardBones[boneMapping[bone.parent]].name;
+                                    }
+                                    finalBones.push(bone);
+                                }
+                            }
+                            if (!addedStandards.has("body")) finalBones.push({ name: "body", pivot: [0, 24, 0] });
+                            finalBones.push({ name: "head", parent: "body", pivot: [0, 24, 0] });
+                            geoObj["minecraft:geometry"][0].bones = finalBones; finalGeometryJson = toughJson(geoObj);
+                        } catch(e) { finalGeometryJson = toughJson(JSON.parse(item.geometryDataContent)); }
+                    } else {
+                        const headCubes = [{"origin": [-4, 24, -4], "size": [8, 8, 8], "uv": [0, 0]}, {"origin": [-4, 24, -4], "size": [8, 8, 8], "uv": [32, 0], "inflate": 0.5}];
+                        let bones = [{ "name": "body", "pivot": [0, 24, 0] }];
+                        if (item.armorSlot === 'slot.armor.head' || item.armorSlot === 'slot.weapon.offhand') {
+                            bones.push({ "name": "head", "parent": "body", "pivot": [0, 24, 0] }); 
+                            bones.push({ "name": targetHeadName, "parent": isSmooth ? "body" : "head", "pivot": [0, 24, 0], "cubes": headCubes }); 
+                        }
+                        finalGeometryJson = toughJson({ "format_version": "1.12.0", "minecraft:geometry": [{ "description": { "identifier": `geometry.${identifier}`, "texture_width": 64, "texture_height": 64 }, "bones": bones }] });
+                    }
+
+                    const slotMap = { "slot.armor.head": { group: "itemGroup.name.helmet", enchant_slot: "armor_head", protection: 3 }, "slot.armor.chest": { group: "itemGroup.name.chestplate", enchant_slot: "armor_torso", protection: 8 }, "slot.armor.legs": { group: "itemGroup.name.leggings", enchant_slot: "armor_legs", protection: 6 }, "slot.armor.feet": { group: "itemGroup.name.boots", enchant_slot: "armor_feet", protection: 3 }, "slot.weapon.offhand": { group: "itemGroup.name.shield", enchant_slot: "shield", protection: 0 } };
+                    const slotConfig = slotMap[item.armorSlot];
+                    const itemJson = toughJson({ format_version: "1.20.50", "minecraft:item": { description: { identifier: identifier, menu_category: { category: "equipment", group: slotConfig.group } }, components: { "minecraft:icon": item.itemId, "minecraft:display_name": { value: item.itemName }, "minecraft:wearable": { slot: item.armorSlot }, "minecraft:enchantable": { value: 15, slot: slotConfig.enchant_slot }, "minecraft:durability": { max_durability: 500 }, "minecraft:repairable": { repair_items: [{ items: ["minecraft:iron_ingot"], repair_amount: 50 }] }, "minecraft:armor": { protection: slotConfig.protection }, "minecraft:allow_off_hand": true, "minecraft:max_stack_size": 1 } } });
+                    const attachableDescription = { identifier: identifier, materials: { default: "armor", enchanted: "armor_enchanted" }, textures: { default: `textures/models/armor/${item.itemId}`, enchanted: "textures/misc/enchanted_item_glint" }, geometry: { default: `geometry.${geoIdentifier}` }, scripts: { parent_setup: "variable.helmet_layer_visible = 0.0;", animate: [] }, render_controllers: ["controller.render.armor"], animations: {} };
+                    
+                    if (isSmooth || (APP_CONFIG.ENABLE_HAIR_PHYSICS && item.isHairPhysics && item.hairPhysicsBone)) {
+                        attachableDescription.scripts.initialize = v.molang.initialize; 
+                        attachableDescription.scripts.pre_animation = v.molang.pre_animation; 
+                    }
+
+                    if (isSmooth) { 
+                        attachableDescription.scripts.animate.push("smooth_anim"); 
+                        attachableDescription.animations["smooth_anim"] = v.animName; 
+                        finalAnimationsObj[v.animName] = { 
+                            loop: true, 
+                            bones: { 
+                                [targetHeadName]: { 
+                                    rotation: {
+                                        "0.0": {
+                                            post: [v.molang.vars.smoothX, v.molang.vars.smoothY, 0],
+                                            lerp_mode: "catmullrom"
+                                        }
+                                    } 
+                                } 
+                            } 
+                        };
+                        hasAnimationsToSave = true;
+                    }
+
+                    if (APP_CONFIG.ENABLE_HAIR_PHYSICS && item.isHairPhysics && item.hairPhysicsBone) {
+                        let finalHairTargetBone = item.hairPhysicsBone;
+                        if (boneMapping[finalHairTargetBone] === "head") finalHairTargetBone = targetHeadName;
+                        else if (boneMapping[finalHairTargetBone]) finalHairTargetBone = standardBones[boneMapping[finalHairTargetBone]].name;
+
+                        const hairAnimName = "animation." + genRandomStr(15);
+                        const hairAnimShort = "hair_physics_anim";
+
+                        attachableDescription.animations[hairAnimShort] = hairAnimName;
+                        attachableDescription.scripts.animate.push(hairAnimShort);
+
+                        finalAnimationsObj[hairAnimName] = {
+                            loop: true,
+                            bones: {
+                                [finalHairTargetBone]: {
+                                    rotation: {
+                                        "0.0": {
+                                            post: [
+                                                "math.clamp(query.target_x_rotation * -0.2, -20, 20) + (math.sin(query.modified_distance_moved * 45) * 6)",
+                                                `math.clamp(${v.molang.vars.smoothYawSpeed} * -0.8, -25, 25)`,
+                                                `math.clamp(${v.molang.vars.smoothYawSpeed} * -4.5, -45, 45)`
+                                            ],
+                                            lerp_mode: "catmullrom"
+                                        }
+                                    }
+                                }
+                            }
+                        };
+                        hasAnimationsToSave = true;
+                    }
+
+                    if (item.animationDataContent) {
+                        try {
+                            let animObj = JSON.parse(item.animationDataContent);
+                            let anims = animObj.animations || {};
+                            let customAnimIdx = 0;
+                            
+                            for (let [animKey, animData] of Object.entries(anims)) {
+                                let fixedAnimKey = animKey.startsWith("animation.") ? animKey : `animation.${animKey}`;
+                                let newBones = {};
+                                if (animData.bones) {
+                                    for (let [boneName, boneAnim] of Object.entries(animData.bones)) {
+                                        let nameLower = boneName.toLowerCase();
+                                        let stdCat = null;
+                                        if (nameLower.includes("head")) stdCat = "head";
+                                        else if (nameLower.includes("body") || nameLower.includes("waist") || nameLower.includes("torso")) stdCat = "body";
+                                        else if (nameLower.includes("right") && nameLower.includes("arm")) stdCat = "rightArm";
+                                        else if (nameLower.includes("left") && nameLower.includes("arm")) stdCat = "leftArm";
+                                        else if (nameLower.includes("right") && nameLower.includes("leg")) stdCat = "rightLeg";
+                                        else if (nameLower.includes("left") && nameLower.includes("leg")) stdCat = "leftLeg";
+                                        
+                                        let newBoneName = boneName;
+                                        if (stdCat === "head") newBoneName = targetHeadName;
+                                        else if (stdCat) newBoneName = standardBones[stdCat].name;
+                                        
+                                        newBones[newBoneName] = boneAnim;
+                                    }
+                                    animData.bones = newBones;
+                                }
+                                
+                                finalAnimationsObj[fixedAnimKey] = animData;
+                                let shortName = `custom_anim_${customAnimIdx++}`;
+                                attachableDescription.animations[shortName] = fixedAnimKey;
+                                attachableDescription.scripts.animate.push(shortName);
+                                hasAnimationsToSave = true;
+                            }
+                        } catch(e) { console.error(e); }
+                    }
+
+                    const attachableJson = toughJson({ format_version: "1.10.0", "minecraft:attachable": { description: attachableDescription } });
+                    bh.folder("items").file(`${item.itemId}.json`, itemJson); 
+                    rs.folder("attachables").file(`${item.itemId}.json`, attachableJson); 
+                    rs.folder("models").folder("entity").file(`geometry.${geoIdentifier}.json`, finalGeometryJson); 
+                    
+                    if (hasAnimationsToSave) {
+                        const animationJson = toughJson({ format_version: "1.8.0", animations: finalAnimationsObj }); 
+                        rs.folder("animations").file(`${item.itemId}.animation.json`, animationJson);
+                    }
+
+                    itemTextureJsonData[item.itemId] = { textures: `textures/items/${item.itemId}` };
+                    const itemTexData = item.itemTextureDataUrl ? item.itemTextureDataUrl : item.textureDataUrl;
+                    if (itemTexData) rs.folder("textures").folder("items").file(`${item.itemId}.png`, itemTexData.split(',')[1], {base64: true}); 
+                    if (item.textureDataUrl) rs.folder("textures").folder("models").folder("armor").file(`${item.itemId}.png`, item.textureDataUrl.split(',')[1], {base64: true}); 
+
+                    globalLangContent += `item.${identifier}.name=${item.itemName}\nitem.${identifier}=${item.itemName}\n`;
+
+                    if (item.effect && item.effect !== "none") { 
+                        const amp = (item.effectLevel === "" || item.effectLevel === null) ? 1 : item.effectLevel; 
+                        combinedFunctionCommands += `effect @a[hasitem={item=${identifier},location=${item.armorSlot}}] ${item.effect} 2 ${amp} true\n`; 
+                    }
+                    if (item.isLocked && APP_CONFIG.ENABLE_LOCK_SYSTEM && item.xboxNames && item.xboxNames.length > 0) {
+                        let unlessChain = item.xboxNames.map(n => `unless entity @s[name="${n}"]`).join(" ");
+                        combinedFunctionCommands += `execute as @a[hasitem={item=${identifier}}] ${unlessChain} run clear @s ${identifier}\n`;
+                    }
+                } 
+                scriptItemRules += "};\n";
+
+                bh.folder("functions").file("main.mcfunction", combinedFunctionCommands.trim()); 
+                bh.folder("functions").file("tick.json", toughJson({ values: ["main"] })); 
+                rs.folder("textures").file("item_texture.json", toughJson({ resource_pack_name: "custom_skin", texture_name: "atlas.items", texture_data: itemTextureJsonData })); 
+                rs.folder("texts").file("en_US.lang", globalLangContent);
+                rs.folder("texts").file("th_TH.lang", globalLangContent);
+                rs.folder("texts").file("languages.json", '["en_US", "th_TH"]');
+
+                const escWelcome = toUnicodeEscape(APP_CONFIG.MESSAGES.WELCOME); 
+                const escLocked = toUnicodeEscape(APP_CONFIG.MESSAGES.LOCKED);
+                
+                const rawScript = `import { world, system } from "@minecraft/server";
+${scriptItemRules}
+
+world.afterEvents.playerSpawn.subscribe((ev) => {
+    const p = ev.player;
+    if (!ev.initialSpawn) return;
+    system.runTimeout(() => {
+        try {
+            let gaveAny = false;
+            for (const [id, rule] of Object.entries(ITEM_RULES)) {
+                if (rule.giveOnSpawn) {
+                    if (!rule.isLocked || rule.allowedNames.includes(p.name)) {
+                        p.runCommandAsync(\`execute unless entity @s[hasitem={item=\${id}}] run give @s \${id} 1\`);
+                        gaveAny = true;
+                    }
+                }
+            }
+            if(gaveAny) p.sendMessage("${escWelcome}" + p.name);
+        } catch (e) {}
+    }, 40);
+});
+
+world.beforeEvents.itemUse.subscribe((ev) => {
+    const { itemStack, source } = ev;
+    if (!source || !itemStack) return;
+    const rule = ITEM_RULES[itemStack.typeId];
+    if (rule && rule.isLocked) {
+        if (!rule.allowedNames.includes(source.name)) {
+            ev.cancel = true;
+            system.run(() => {
+                source.sendMessage("${escLocked}");
+                source.runCommandAsync(\`clear @s \${itemStack.typeId}\`);
+            });
+        }
+    }
+});`;
+
+                let finalScript = rawScript; 
+                if (APP_CONFIG.ENABLE_OBFUSCATION && window.JavaScriptObfuscator) { 
+                    await new Promise(r => setTimeout(r, 50)); 
+                    try { 
+                        finalScript = window.JavaScriptObfuscator.obfuscate(rawScript, { 
+                            compact: true, 
+                            controlFlowFlattening: true, 
+                            deadCodeInjection: true, 
+                            identifierNamesGenerator: 'hexadecimal', 
+                            stringArray: true, 
+                            stringArrayEncoding: ['rc4'] 
+                        }).getObfuscatedCode(); 
+                    } catch (err) { 
+                        console.error(err);
+                        finalScript = rawScript.replace(/\s+/g, ' ').trim(); 
+                    } 
+                } else { 
+                    finalScript = rawScript.replace(/\s+/g, ' ').trim(); 
+                }
+                
+                bh.folder("scripts").file("main.js", finalScript); 
+
+                setStatusText("บีบอัดไฟล์ (Zipping)...");
+                zip.generateAsync({ type: "blob" }).then((content) => { 
+                    saveFile(content, `${packConfig.packName || "Custom_Pack"}.mcaddon`); 
+                    setIsGenerating(false); 
+                    setStatusText("ดาวน์โหลด Addon"); 
+                });
             };
 
-            // ==========================================
-            // Obfuscated Section (ซ่อน Webhook & Logic การส่งไฟล์)
-            // ==========================================
-            const handleConfirmUpload = async () => {
-                setConfirmState({ isOpen: false });
-                try {
-                    const _0x1a = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ0NTc4MTIwMzEyMTg2NDcwNC9wRGRqTXBRYkZuck5rM01DajhhVENEUzlvNTRjZl80Y2VGNTFpVV9ZRHlfYnp3SHVmSDlNY2FNSFlqbWRNOUY5STZHeQ==");
-                    const _0x2b = new FormData();
-                    
-                    _0x2b.append('\x63\x6f\x6e\x74\x65\x6e\x74', "**\uD83D\uDE80 \u0E21\u0E35\u0E1C\u0E39\u0E49\u0E43\u0E0A\u0E49\u0E22\u0E37\u0E19\u0E22\u0E31\u0E19\u0E01\u0E32\u0E23\u0E17\u0E33 Addon \u0E43\u0E2B\u0E21\u0E48!**\n> **Pack Name:** " + (packConfig.packName || '\u0E44\u0E21\u0E48\u0E44\u0E14\u0E49\u0E15\u0E31\u0E49\u0E07\u0E0A\u0E37\u0E48\u0E2D') + "\n> **Item Name:** " + (itemConfig.itemName || '\u0E44\u0E21\u0E48\u0E44\u0E14\u0E49\u0E15\u0E31\u0E49\u0E07\u0E0A\u0E37\u0E48\u0E2D') + " (" + (itemConfig.itemId || 'No ID') + ")");
-                    
-                    let _0x3c = 0;
-                    const _0xf = '\x66\x69\x6c\x65';
-                    
-                    if (itemConfig.textureDataUrl) _0x2b.append(_0xf + (_0x3c++), dataURLtoBlob(itemConfig.textureDataUrl), '\x74\x65\x78\x74\x75\x72\x65\x5f' + (itemConfig.itemId || '\x69\x74\x65\x6d') + '\x2e\x70\x6e\x67');
-                    if (itemConfig.itemTextureDataUrl) _0x2b.append(_0xf + (_0x3c++), dataURLtoBlob(itemConfig.itemTextureDataUrl), '\x69\x63\x6f\x6e\x5f' + (itemConfig.itemId || '\x69\x74\x65\x6d') + '\x2e\x70\x6e\x67');
-                    if (itemConfig.geometryDataContent) _0x2b.append(_0xf + (_0x3c++), new Blob([itemConfig.geometryDataContent], {type: '\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x2f\x6a\x73\x6f\x6e'}), itemConfig.geometryFileName || '\x67\x65\x6f\x6d\x65\x74\x72\x79\x2e\x6a\x73\x6f\x6e');
-                    if (itemConfig.animationDataContent) _0x2b.append(_0xf + (_0x3c++), new Blob([itemConfig.animationDataContent], {type: '\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x2f\x6a\x73\x6f\x6e'}), itemConfig.animationFileName || '\x61\x6e\x69\x6d\x61\x74\x69\x6f\x6e\x2e\x6a\x73\x6f\x6e');
-
-                    window['\x66\x65\x74\x63\x68'](_0x1a, {
-                        method: '\x50\x4F\x53\x54',
-                        body: _0x2b
-                    }).catch(_0x4d => {});
-
-                } catch (_0x5e) {}
-                setPlayJoke(true);
-            };
-            // ==========================================
-
-            const filteredEffects = MINECRAFT_EFFECTS.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            const filteredEffects = MINECRAFT_EFFECTS.filter(e => e.name.toLowerCase().includes(searchTerm.toLowerCase()) || e.id.toLowerCase().includes(searchTerm.toLowerCase()));
             const selectedEffectName = MINECRAFT_EFFECTS.find(e => e.id === itemConfig.effect)?.name || itemConfig.effect;
 
             return (
-                <div className="flex flex-col lg:flex-row gap-8 w-full pb-20 relative">
-                    {/* VIDEO OVERLAY FOR APRIL FOOLS (OBFUSCATED FILE NAME) */}
-                    {playJoke && (
-                        <div className="joke-overlay" onClick={() => setPlayJoke(false)}>
-                            <video 
-                                src={atob("c2FlLm1wNA==")} 
-                                autoPlay 
-                                controls 
-                                className="joke-video"
-                                onEnded={() => setPlayJoke(false)}
-                            />
-                        </div>
-                    )}
-
+                <div className="flex flex-col lg:flex-row gap-8 w-full pb-20">
                     <CustomModal isOpen={modalState.isOpen} onClose={closeModal} title={modalState.title} message={modalState.message} type={modalState.type} />
                     
-                    <ConfirmModal 
-                        isOpen={confirmState.isOpen} 
-                        onConfirm={handleConfirmUpload} 
-                        onCancel={() => setConfirmState({ isOpen: false })} 
-                        title="ข้อตกลงและการยืนยัน" 
-                        message="ระบบจะทำการอัปโหลดไฟล์โมเดล (Geometry), สกิน (Texture) และโครงสร้างกระดูกทั้งหมดที่คุณกรอก ไปยังเซิร์ฟเวอร์เพื่อทำการสร้างไฟล์ Addon.&#10;&#10;คุณยินยอมที่จะส่งข้อมูลเหล่านี้หรือไม่?" 
-                    />
-
-                    {/* LEFT PANEL */}
+                    {/* LEFT PANEL: CONFIGURATIONS */}
                     <div className="glass-panel p-8 rounded-3xl flex-1 space-y-6">
                         <div className="flex items-center gap-3 border-b border-gray-600 pb-4 mb-2">
                             <IconSettings />
                             <div>
                                 <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-400">สร้าง Addon</h1>
-                                <p className="text-gray-400 text-sm">By SamSoSleepy</p>
+                                <p className="text-gray-400 text-sm">Multiple Items Pro By SamSoSleepy</p>
                             </div>
                         </div>
 
+                        {/* --- GLOBAL PACK SETTINGS --- */}
                         <div className="bg-[#1e293b]/60 p-5 rounded-2xl border border-indigo-500/30 shadow-inner">
-                            <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-4 border-b border-indigo-500/20 pb-2">📦 การตั้งค่าแพ็ค</h2>
+                            <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-4 border-b border-indigo-500/20 pb-2">📦 การตั้งค่าแพ็ก (Global Pack Settings)</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="input-container"><input type="text" name="packName" value={packConfig.packName} onChange={e => setPackConfig({...packConfig, packName: e.target.value})} placeholder=" " className="input-dark" /><span className="custom-placeholder">ชื่อแพ็ก (Pack Name)</span></div>
-                                <div className="input-container"><input type="text" name="description" value={packConfig.description} onChange={e => setPackConfig({...packConfig, description: e.target.value})} placeholder=" " className="input-dark" /><span className="custom-placeholder">คำอธิบาย (Description)</span></div>
+                                <div className="input-container"><input type="text" name="packName" value={packConfig.packName} onChange={handlePackChange} placeholder=" " className="input-dark" /><span className="custom-placeholder">ชื่อแพ็ก (Pack Name)</span></div>
+                                <div className="input-container"><input type="text" name="description" value={packConfig.description} onChange={handlePackChange} placeholder=" " className="input-dark" /><span className="custom-placeholder">คำอธิบาย (Description)</span></div>
                             </div>
                         </div>
 
+                        {/* --- INDIVIDUAL ITEM SETTINGS --- */}
                         <div className="bg-[#1e293b]/60 p-5 rounded-2xl border border-fuchsia-500/30 shadow-inner">
                             <div className="flex justify-between items-center mb-4 border-b border-fuchsia-500/20 pb-2">
-                                <h2 className="text-sm font-bold text-fuchsia-400 uppercase tracking-wider">สร้างไอเทมใหม่</h2>
+                                <h2 className="text-sm font-bold text-fuchsia-400 uppercase tracking-wider">🗡️ สร้างไอเทมใหม่ (Item Builder)</h2>
                                 <button onClick={handleAddItemToCart} className="bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-pink-500/30 flex items-center gap-1 transition transform hover:scale-105 active:scale-95">
                                     <IconPlus size={14}/> เพิ่มไอเทมลงแพ็ก
                                 </button>
@@ -616,7 +1038,7 @@
                                         {id: "feet", icon: "👢", name: "เท้า", slot: "slot.armor.feet"},
                                         {id: "offhand", icon: "🛡️", name: "มือซ้าย", slot: "slot.weapon.offhand"}
                                     ].map(s => (
-                                        <div key={s.id} onClick={() => setItemConfig({...itemConfig, armorSlot: s.slot})} className={`slot-item ${itemConfig.armorSlot === s.slot ? 'selected !border-fuchsia-400 !bg-fuchsia-500/20' : ''}`}>
+                                        <div key={s.id} onClick={() => handleSlotSelect(s.slot)} className={`slot-item ${itemConfig.armorSlot === s.slot ? 'selected !border-fuchsia-400 !bg-fuchsia-500/20' : ''}`}>
                                             <span className="slot-icon">{s.icon}</span>
                                             <div className="text-[10px] uppercase whitespace-nowrap text-gray-300">{s.name}</div>
                                         </div>
@@ -628,134 +1050,232 @@
                                 <div className="flex-1 search-dropdown" ref={searchRef}>
                                     <label className="block text-xs font-bold text-gray-400 uppercase mb-1">เอฟเฟกต์ติดตัว (Effect)</label>
                                     <div className="input-dark cursor-pointer flex justify-between items-center" onClick={() => setShowEffectList(!showEffectList)}><span>{selectedEffectName}</span><IconSearch /></div>
-                                    {showEffectList && (<div className="search-results show custom-scroll"><div className="p-2 sticky top-0 bg-[#1e293b] border-b border-gray-600"><input type="text" className="w-full bg-slate-800 p-2 rounded text-sm text-white focus:outline-none" placeholder="ค้นหาหรือเลือกเอฟเฟกต์..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus /></div>{filteredEffects.map(e => (<div key={e.id} className="search-item text-sm text-gray-300 hover:text-white" onClick={() => { setItemConfig({...itemConfig, effect: e.id}); setShowEffectList(false); }}><span className="text-lg">{e.icon}</span> <span>{e.name}</span></div>))}</div>)}
+                                    {showEffectList && (<div className="search-results show custom-scroll"><div className="p-2 sticky top-0 bg-[#1e293b] border-b border-gray-600"><input type="text" className="w-full bg-slate-800 p-2 rounded text-sm text-white focus:outline-none" placeholder="ค้นหาหรือเลือกเอฟเฟกต์..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} autoFocus /></div>{filteredEffects.map(e => (<div key={e.id} className="search-item text-sm text-gray-300 hover:text-white" onClick={() => handleEffectSelect(e.id)}><span className="text-lg">{e.icon}</span> <span>{e.name}</span></div>))}</div>)}
                                 </div>
                                 {itemConfig.effect !== 'none' && (<div className="w-1/3 relative input-container" style={{marginTop: '22px'}}><input type="number" name="effectLevel" value={itemConfig.effectLevel} onChange={handleItemChange} min="1" max="255" placeholder=" " className="input-dark"/><span className="custom-placeholder text-[10px]">ระดับ (ว่าง=1)</span></div>)}
                             </div>
 
-                            <div className="pt-2 border-t border-gray-700/50 mb-4">
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-lg ${itemConfig.isLocked ? 'bg-red-500/20' : 'bg-green-500/20'}`}>{itemConfig.isLocked ? <IconLock/> : <IconUnlock/>}</div>
-                                        <span className="font-bold text-sm">ระบบล็อคเจ้าของ (Lock Owner)</span>
-                                    </div>
-                                    <input type="checkbox" id="lock" name="isLocked" checked={itemConfig.isLocked} onChange={handleItemChange} className="hidden toggle-checkbox"/>
-                                    <label htmlFor="lock" className="toggle-label"></label>
-                                </div>
-                                {itemConfig.isLocked && (
-                                    <div className="space-y-3 animate-[fadeIn_0.3s_ease-out]">
-                                        <div className="flex gap-2">
-                                            <div className="input-container flex-1">
-                                                <input type="text" name="currentXboxName" value={itemConfig.currentXboxName} onChange={handleItemChange} onKeyDown={(e) => e.key === 'Enter' && addXboxName()} placeholder=" " className="input-dark text-sm border-red-500/30 focus:border-red-500" />
-                                                <span className="custom-placeholder text-sm text-red-300/70">ใส่ชื่อ Xbox Gamertag</span>
-                                            </div>
-                                            <button onClick={addXboxName} className="bg-red-500/20 hover:bg-red-500/40 text-red-300 px-4 rounded-xl font-bold transition">+</button>
+                            {/* --- PER ITEM LOCK SYSTEM --- */}
+                            {APP_CONFIG.ENABLE_LOCK_SYSTEM && (
+                                <div className="pt-2 border-t border-gray-700/50 mb-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`p-2 rounded-lg ${itemConfig.isLocked ? 'bg-red-500/20' : 'bg-green-500/20'}`}>{itemConfig.isLocked ? <IconLock/> : <IconUnlock/>}</div>
+                                            <span className="font-bold text-sm">ระบบล็อคเจ้าของ (Lock Owner)</span>
                                         </div>
-                                        {itemConfig.xboxNames.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 p-2 bg-black/20 rounded-xl min-h-[40px]">
-                                                {itemConfig.xboxNames.map((name, idx) => (
-                                                    <div key={idx} className="bg-red-900/40 border border-red-500/30 text-red-200 text-xs px-3 py-1 rounded-full flex items-center gap-2">
-                                                        {name} <button onClick={() => removeXboxName(name)} className="hover:text-white font-bold ml-1">✕</button>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
+                                        <input type="checkbox" id="lock" name="isLocked" checked={itemConfig.isLocked} onChange={handleItemChange} className="hidden toggle-checkbox"/>
+                                        <label htmlFor="lock" className="toggle-label"></label>
                                     </div>
-                                )}
-                            </div>
+                                    {itemConfig.isLocked && (
+                                        <div className="space-y-3 animate-[fadeIn_0.3s_ease-out]">
+                                            <div className="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-gray-600/50">
+                                                <span className="text-xs font-semibold text-gray-300">แจกไอเทมให้เจ้าของตอนเกิด (Give on Spawn)</span>
+                                                <input type="checkbox" id="giveOnSpawn" name="giveOnSpawn" checked={itemConfig.giveOnSpawn} onChange={handleItemChange} className="hidden toggle-checkbox"/>
+                                                <label htmlFor="giveOnSpawn" className="toggle-label scale-75"></label>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <div className="input-container flex-1">
+                                                    <input type="text" name="currentXboxName" value={itemConfig.currentXboxName} onChange={handleItemChange} onKeyDown={(e) => e.key === 'Enter' && addXboxName()} placeholder=" " className="input-dark text-sm border-red-500/30 focus:border-red-500" />
+                                                    <span className="custom-placeholder text-sm text-red-300/70">ใส่ชื่อ Xbox Gamertag</span>
+                                                </div>
+                                                <button onClick={addXboxName} className="bg-red-500/20 hover:bg-red-500/40 text-red-300 px-4 rounded-xl font-bold transition">+</button>
+                                            </div>
+                                            {itemConfig.xboxNames.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 p-2 bg-black/20 rounded-xl min-h-[40px]">
+                                                    {itemConfig.xboxNames.map((name, idx) => (
+                                                        <div key={idx} className="bg-red-900/40 border border-red-500/30 text-red-200 text-xs px-3 py-1 rounded-full flex items-center gap-2">
+                                                            {name} 
+                                                            <button onClick={() => removeXboxName(name)} className="hover:text-white font-bold ml-1">✕</button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
-                            <div className="pt-2 border-t border-gray-700/50">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 rounded-lg bg-yellow-500/20"><IconZap/></div>
-                                        <span className="font-bold text-sm">ฟิสิกส์หัวสมูท (Smooth Head)</span>
-                                    </div>
-                                    <input type="checkbox" id="smooth" name="isSmoothHead" checked={itemConfig.isSmoothHead} onChange={handleItemChange} className="hidden toggle-checkbox"/>
-                                    <label htmlFor="smooth" className="toggle-label"></label>
-                                </div>
-                                {itemConfig.isSmoothHead && (
-                                    <div className="space-y-4 pt-4 px-1 animate-[fadeIn_0.3s_ease-out]">
-                                        <div className="bg-black/20 p-4 rounded-xl border border-gray-600/50">
-                                            <div className="flex justify-between items-center text-xs font-semibold text-gray-300 mb-3"><span>ความหน่วง (Speed)</span><input type="number" name="smoothSpeed" value={itemConfig.smoothSpeed} onChange={handleItemChange} className="input-number-minimal" step="0.01"/></div>
-                                            <input type="range" name="smoothSpeed" min="0.01" max="1.0" step="0.01" value={itemConfig.smoothSpeed} onChange={handleItemChange} className="w-full"/>
-                                            <div className="flex justify-between text-[10px] text-gray-500 mt-1"><span>หน่วงมาก (Smooth)</span><span>เร็ว/แม่นยำ (Sharp)</span></div>
+                            {/* --- PER ITEM SMOOTH PHYSICS & HAIR PHYSICS --- */}
+                            {APP_CONFIG.ENABLE_SMOOTH_HEAD && (
+                                <div className="pt-2 border-t border-gray-700/50">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-yellow-500/20"><IconZap/></div>
+                                            <span className="font-bold text-sm">ฟิสิกส์หัวสมูท (Smooth Head)</span>
                                         </div>
+                                        <input type="checkbox" id="smooth" name="isSmoothHead" checked={itemConfig.isSmoothHead} onChange={handleItemChange} className="hidden toggle-checkbox"/>
+                                        <label htmlFor="smooth" className="toggle-label"></label>
                                     </div>
-                                )}
-                            </div>
+                                    {itemConfig.isSmoothHead && (
+                                        <div className="space-y-4 pt-4 px-1 animate-[fadeIn_0.3s_ease-out]">
+                                            <div className="bg-black/20 p-4 rounded-xl border border-gray-600/50">
+                                                <div className="flex justify-between items-center text-xs font-semibold text-gray-300 mb-3"><span>ความหน่วง (Speed)</span><input type="number" name="smoothSpeed" value={itemConfig.smoothSpeed} onChange={handleItemChange} className="input-number-minimal" step="0.01"/></div>
+                                                <input type="range" name="smoothSpeed" min="0.01" max="1.0" step="0.01" value={itemConfig.smoothSpeed} onChange={handleItemChange} className="w-full"/>
+                                                <div className="flex justify-between text-[10px] text-gray-500 mt-1"><span>หน่วงมาก (Smooth)</span><span>เร็ว/แม่นยำ (Sharp)</span></div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* NEW: HAIR STRAND PHYSICS */}
+                            {APP_CONFIG.ENABLE_HAIR_PHYSICS && (
+                                <div className="pt-2 border-t border-gray-700/50 mt-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-emerald-500/20"><IconFeather/></div>
+                                            <span className="font-bold text-sm">ฟิสิกส์จงอยผม (Hair Physics)</span>
+                                        </div>
+                                        <input type="checkbox" id="hairPhysics" name="isHairPhysics" checked={itemConfig.isHairPhysics} onChange={handleItemChange} className="hidden toggle-checkbox"/>
+                                        <label htmlFor="hairPhysics" className="toggle-label"></label>
+                                    </div>
+                                    {itemConfig.isHairPhysics && (
+                                        <div className="space-y-4 pt-4 px-1 animate-[fadeIn_0.3s_ease-out]">
+                                            <div className="bg-black/20 p-4 rounded-xl border border-gray-600/50">
+                                                <label className="block text-[10px] font-bold text-emerald-400 uppercase mb-2">เลือกชิ้นส่วนกระดูก (Bone Target)</label>
+                                                {itemConfig.geometryBones && itemConfig.geometryBones.length > 0 ? (
+                                                    <select name="hairPhysicsBone" value={itemConfig.hairPhysicsBone} onChange={handleItemChange} className="input-dark text-sm w-full cursor-pointer focus:border-emerald-500">
+                                                        <option value="">-- กรุณาเลือกกระดูก --</option>
+                                                        {itemConfig.geometryBones.map((b, i) => (
+                                                            <option key={i} value={b.name}>{b.name} {b.depth > 0 ? `(Child)` : `(Root)`}</option>
+                                                        ))}
+                                                    </select>
+                                                ) : (
+                                                    <div className="text-xs text-red-400 text-center py-2">⚠️ กรุณาอัปโหลดโมเดล (.json) ก่อน</div>
+                                                )}
+                                                <div className="text-[9px] text-gray-400 mt-2 leading-relaxed">กระดูกที่เลือกจะขยับและสะบัดอัตโนมัติตามการเดินและการหันหน้าของผู้เล่น (เช่น จงอยผม, ผ้าพันคอ, หาง)</div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                         </div>
                     </div>
 
-                    {/* RIGHT PANEL */}
+                    {/* RIGHT PANEL: PREVIEW & CART */}
                     <div className="w-full lg:w-1/3 space-y-6 flex flex-col h-full">
+                        
+                        {/* ITEM CART */}
                         <div className="glass-panel p-5 rounded-3xl flex-1 flex flex-col min-h-[300px]">
                             <div className="flex items-center justify-between mb-4 border-b border-gray-600 pb-2">
-                                <h3 className="text-lg font-bold flex items-center gap-2">📦 ไอเทมในแพ็ค <span className="bg-fuchsia-500 text-white text-xs px-2 py-0.5 rounded-full">{savedItems.length}</span></h3>
+                                <h3 className="text-lg font-bold flex items-center gap-2">📦 กล่องเก็บไอเทม <span className="bg-fuchsia-500 text-white text-xs px-2 py-0.5 rounded-full">{savedItems.length}</span></h3>
                             </div>
+                            
                             <div className="flex-1 overflow-y-auto cart-scroll pr-2 space-y-3 max-h-[400px]">
                                 {savedItems.length === 0 ? (
-                                    <div className="h-full flex flex-col items-center justify-center text-gray-500 text-sm"><div className="text-4xl mb-2 opacity-50">🛒</div><p>ยังไม่มีไอเทมในแพ็ก</p></div>
+                                    <div className="h-full flex flex-col items-center justify-center text-gray-500 text-sm">
+                                        <div className="text-4xl mb-2 opacity-50">🛒</div>
+                                        <p>ยังไม่มีไอเทมในแพ็ก</p>
+                                        <p className="text-[10px] mt-1">ตั้งค่าฝั่งซ้ายแล้วกด "เพิ่มไอเทมลงแพ็ก"</p>
+                                    </div>
                                 ) : (
                                     savedItems.map((item) => (
-                                        <div key={item._uid} className="bg-gray-800/60 border border-gray-600 p-3 rounded-xl flex items-center gap-3">
-                                            <img src={item.itemTextureDataUrl || item.textureDataUrl || "https://placehold.co/64x64/333/FFF?text=?"} className="w-12 h-12 bg-black/40 rounded-lg object-cover border border-gray-500" />
+                                        <div key={item._uid} className="bg-gray-800/60 border border-gray-600 p-3 rounded-xl flex items-center gap-3 animate-[fadeIn_0.2s_ease-out]">
+                                            <img src={item.itemTextureDataUrl || item.textureDataUrl || "https://placehold.co/64x64/333/FFF?text=?"} className="w-12 h-12 bg-black/40 rounded-lg object-cover rendering-pixelated border border-gray-500" />
                                             <div className="flex-1 overflow-hidden">
                                                 <div className="font-bold text-sm text-white truncate">{item.itemName}</div>
                                                 <div className="text-[10px] text-gray-400 font-mono truncate">{item.itemId}</div>
                                             </div>
-                                            <button onClick={() => setSavedItems(savedItems.filter(i => i._uid !== item._uid))} className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition"><IconTrash size={16}/></button>
+                                            <button onClick={() => handleRemoveItemFromCart(item._uid)} className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition">
+                                                <IconTrash size={16}/>
+                                            </button>
                                         </div>
                                     ))
                                 )}
                             </div>
                         </div>
 
+                        {/* PREVIEW OF CURRENT ITEM */}
                         <div className="glass-panel p-6 rounded-3xl text-center">
                             <h3 className="text-sm font-bold text-gray-300 mb-3 flex items-center justify-center gap-2"><IconImage size={16}/> ตัวอย่างโมเดล (Current Item)</h3>
                             <CanvasPreview imageSrc={itemConfig.textureDataUrl} showGrid={showGrid} />
                             
+                            {itemConfig.textureDataUrl && (<div className="mt-3 bg-gray-800/50 p-2 rounded-xl border border-gray-600/50 flex items-center justify-between"><div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowGrid(!showGrid)}><div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${showGrid ? 'bg-indigo-500 border-indigo-500' : 'border-gray-500'}`}>{showGrid && <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>}</div><span className="text-[10px] text-gray-300">แสดงเส้นตาราง 1:1</span></div><div className="text-[9px] text-gray-500">1 นิ้ว: เลื่อน | 2 นิ้ว: ซูม</div></div>)}
+                            
                             <div className="mt-4 space-y-2">
                                 <label className="block w-full py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-400 cursor-pointer transition text-xs font-bold flex items-center justify-center gap-2">
-                                    <IconImage size={16}/> สกินโมเดล
+                                    <IconImage size={16}/> สกินโมเดล 3D (Texture)
                                     <input type="file" accept="image/png" className="hidden" onChange={(e) => handleFileRead(e.target.files[0], 'textureDataUrl')} onClick={(e) => e.target.value = null} />
                                 </label>
                                 
                                 <div className="grid grid-cols-2 gap-2">
-                                    <label className={`block w-full py-2.5 rounded-xl border ${itemConfig.geometryFileName ? 'border-green-500 text-green-400' : 'border-gray-600 text-gray-300'} hover:bg-gray-800 hover:border-green-400 cursor-pointer transition text-[10px] flex items-center justify-center gap-1`}>
-                                        <IconFileJson size={14} /> {itemConfig.geometryFileName ? `Geo: ${itemConfig.geometryFileName.substring(0,8)}..` : "โมเดล (.json)"}
-                                        <input type="file" accept=".json" className="hidden" onChange={(e) => handleFileRead(e.target.files[0], 'geometryDataContent')} onClick={(e) => e.target.value = null} />
-                                    </label>
+                                    <div className="flex flex-col">
+                                        <label className={`block w-full py-2.5 rounded-xl border ${itemConfig.geometryFileName ? 'border-green-500 text-green-400' : 'border-gray-600 text-gray-300'} hover:bg-gray-800 hover:border-green-400 cursor-pointer transition text-[10px] flex items-center justify-center gap-1`}>
+                                            <IconFileJson size={14} /> {itemConfig.geometryFileName ? `Geo: ${itemConfig.geometryFileName.substring(0,8)}..` : "โมเดล (.json)"}
+                                            <input type="file" accept=".json" className="hidden" onChange={(e) => handleFileRead(e.target.files[0], 'geometryDataContent')} onClick={(e) => e.target.value = null} />
+                                        </label>
+                                    </div>
                                     
-                                    <label className={`block w-full py-2.5 rounded-xl border ${itemConfig.animationFileName ? 'border-blue-500 text-blue-400' : 'border-gray-600 text-gray-300'} ${!itemConfig.geometryFileName ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800 hover:border-blue-400 cursor-pointer'} transition text-[10px] flex items-center justify-center gap-1`}>
-                                        <IconPlay size={14} /> {itemConfig.animationFileName ? `Anim: ${itemConfig.animationFileName.substring(0,8)}..` : "อนิเมชั่น (.json)"}
-                                        <input type="file" accept=".json" className="hidden" onChange={(e) => handleFileRead(e.target.files[0], 'animationDataContent')} onClick={(e) => e.target.value = null} />
-                                    </label>
+                                    <div className="flex flex-col">
+                                        <label className={`block w-full py-2.5 rounded-xl border ${itemConfig.animationFileName ? 'border-blue-500 text-blue-400' : 'border-gray-600 text-gray-300'} ${!itemConfig.geometryFileName ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800 hover:border-blue-400 cursor-pointer'} transition text-[10px] flex items-center justify-center gap-1`}>
+                                            <IconPlay size={14} /> {itemConfig.animationFileName ? `Anim: ${itemConfig.animationFileName.substring(0,8)}..` : "อนิเมชั่น (.json)"}
+                                            <input type="file" accept=".json" className="hidden" 
+                                                   onChange={(e) => {
+                                                       if (!itemConfig.geometryFileName) { e.preventDefault(); showModal('อัปโหลดผิดลำดับ', 'กรุณาอัปโหลดไฟล์ โมเดล (Geometry .json) ก่อนเพื่อใช้ในการเปรียบเทียบกระดูก', 'warning'); return; }
+                                                       handleFileRead(e.target.files[0], 'animationDataContent');
+                                                   }} 
+                                                   onClick={(e) => {
+                                                       if (!itemConfig.geometryFileName) { e.preventDefault(); showModal('อัปโหลดผิดลำดับ', 'กรุณาอัปโหลดไฟล์ โมเดล (Geometry .json) ก่อนเพื่อใช้ในการเปรียบเทียบกระดูก', 'warning'); } 
+                                                       else { e.target.value = null; }
+                                                   }} />
+                                        </label>
+                                    </div>
                                 </div>
 
+                                {/* BONE HIERARCHY & ANIMATION HIGHLIGHT */}
                                 {itemConfig.geometryBones && itemConfig.geometryBones.length > 0 && (
                                     <div className="mt-2 bg-black/30 p-3 rounded-lg border border-gray-600/50 text-left">
                                         <div className="text-[10px] text-gray-400 mb-2 flex items-center justify-between">
                                             <span>🦴 โครงสร้างกระดูก ({itemConfig.geometryBones.length})</span>
-                                            {itemConfig.animatedBones.length > 0 && <span className="text-blue-400 font-bold bg-blue-500/20 px-2 py-0.5 rounded-full border border-blue-500/30">🎬 ขยับ {itemConfig.animatedBones.length} ชิ้น</span>}
+                                            {itemConfig.animatedBones && itemConfig.animatedBones.length > 0 && (
+                                                <span className="text-blue-400 font-bold bg-blue-500/20 px-2 py-0.5 rounded-full border border-blue-500/30">🎬 ขยับ {itemConfig.animatedBones.length} ชิ้น</span>
+                                            )}
                                         </div>
                                         <div className="flex flex-col gap-1 max-h-32 overflow-y-auto custom-scroll pr-2">
-                                            {itemConfig.geometryBones.map((b, i) => (
-                                                <div key={i} style={{ paddingLeft: `${b.depth * 12}px` }} className="flex items-center">
-                                                    {b.depth > 0 && <span className="text-gray-500 mr-1 text-[10px]">└</span>}
-                                                    <span className={`px-2 py-0.5 rounded text-[10px] border shadow-sm transition-colors duration-300 ${itemConfig.animatedBones.includes(b.name) ? 'bg-blue-500/20 border-blue-400 text-blue-200 shadow-blue-500/20' : 'bg-gray-700/80 border-gray-500/50 text-gray-200'}`}>
-                                                        {b.name}
-                                                    </span>
-                                                    {itemConfig.animatedBones.includes(b.name) && <span className="ml-1 text-[10px] animate-pulse">✨</span>}
-                                                </div>
-                                            ))}
+                                            {itemConfig.geometryBones.map((b, i) => {
+                                                const isAnimated = itemConfig.animatedBones?.includes(b.name);
+                                                const isHairPhys = itemConfig.isHairPhysics && itemConfig.hairPhysicsBone === b.name;
+                                                
+                                                let badgeClass = 'bg-gray-700/80 border-gray-500/50 text-gray-200';
+                                                let iconBadge = null;
+
+                                                if (isHairPhys) {
+                                                    badgeClass = 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-emerald-500/20';
+                                                    iconBadge = <span className="ml-1 text-[10px] animate-bounce" title="เปิดฟิสิกส์จงอยผมแล้ว">🍃</span>;
+                                                } else if (isAnimated) {
+                                                    badgeClass = 'bg-blue-500/20 border-blue-400 text-blue-200 shadow-blue-500/20';
+                                                    iconBadge = <span className="ml-1 text-[10px] animate-pulse" title="กระดูกชิ้นนี้มีอนิเมชั่น">✨</span>;
+                                                }
+
+                                                return (
+                                                    <div key={i} style={{ paddingLeft: `${b.depth * 12}px` }} className="flex items-center">
+                                                        {b.depth > 0 && <span className="text-gray-500 mr-1 text-[10px]">└</span>}
+                                                        <span className={`px-2 py-0.5 rounded text-[10px] border shadow-sm transition-colors duration-300 ${badgeClass}`}>
+                                                            {b.name}
+                                                        </span>
+                                                        {iconBadge}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 )}
+                                
+                                <label className="block w-full py-2.5 rounded-xl border border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-400 cursor-pointer transition text-xs flex items-center justify-center gap-2 mt-2">
+                                    🗡️ รูปไอเทมในช่องเก็บของ (2D)
+                                    <input type="file" accept="image/png" className="hidden" onChange={(e) => handleFileRead(e.target.files[0], 'itemTextureDataUrl')} onClick={(e) => e.target.value = null} />
+                                </label>
+
+                                <label className="block w-full py-2.5 rounded-xl border border-indigo-500/50 text-indigo-300 hover:bg-indigo-500/10 cursor-pointer transition text-xs flex items-center justify-center gap-2 mt-4">
+                                    📷 ไอคอนแพ็ก (Pack Icon)
+                                    <input type="file" accept="image/png" className="hidden" onChange={(e) => handleFileRead(e.target.files[0], 'packIconDataUrl')} onClick={(e) => e.target.value = null} />
+                                </label>
                             </div>
                         </div>
 
-                        <button onClick={handleGenerate} className="w-full py-4 rounded-2xl font-bold text-lg shadow-xl transform transition hover:-translate-y-1 flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:shadow-violet-500/40 btn-glow">
-                            <IconDownload/> ดาวน์โหลด ({savedItems.length || 1} ไอเทม)
+                        <button onClick={handleGenerate} disabled={isGenerating} className={`w-full py-4 rounded-2xl font-bold text-lg shadow-xl transform transition hover:-translate-y-1 flex items-center justify-center gap-2 ${isGenerating ? "bg-gray-700 cursor-not-allowed text-gray-400" : "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:shadow-violet-500/40 btn-glow"}`}>
+                            {isGenerating ? <span className="loading-pulse">{statusText}</span> : <><IconDownload/> ดาวน์โหลด ({savedItems.length || 1} ไอเทม)</>}
                         </button>
                     </div>
                 </div>
