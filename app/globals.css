@@ -1,0 +1,70 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Prompt", sans-serif;
+  background-color: #0f172a;
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+  background-attachment: fixed;
+  color: #f1f5f9;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 32px 20px;
+}
+
+.panel {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(90deg, #7c3aed, #d946ef);
+  color: #fff;
+}
+
+.input {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  min-width: 260px;
+}
+
+.code {
+  margin-top: 12px;
+  padding: 12px;
+  background: #020617;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
